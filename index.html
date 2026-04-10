@@ -183,15 +183,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .nav-item.active .nav-ring{border-color:var(--olive);}
 .nav-item.active .nav-sq{border-color:var(--olive);}
 .nav-item.active .nav-line{background:var(--olive);}
+.nav-book{width:16px;height:18px;border:1.5px solid var(--muted);border-radius:2px 4px 4px 2px;position:relative;}
+.nav-book::before{content:'';position:absolute;left:3px;top:3px;right:3px;height:1.5px;background:var(--muted);box-shadow:0 4px 0 var(--muted);}
+.nav-item.active .nav-book{border-color:var(--olive);}
+.nav-item.active .nav-book::before{background:var(--olive);}
 
 @media (min-width: 768px) {
   #app { max-width: 100% !important; }
   .bottom-nav { max-width: 100% !important; padding: 14px 48px 24px; }
   .header { padding: 48px 48px 24px; }
   .fixed-meals { padding: 12px 48px; }
-  .meals-section { padding: 0 48px; max-width: 860px; margin: 0 auto; }
-  .prep-section { padding: 0 48px; max-width: 860px; margin: 0 auto; }
-  .grocery-section { padding: 0 48px; max-width: 860px; margin: 0 auto; }
+  .meals-section { padding: 0 48px; }
+  .prep-section { padding: 0 48px; }
+  .grocery-section { padding: 0 48px; }
   .header-title { font-size: 42px; }
   .date-row { gap: 8px; }
   .day-chip { padding: 7px 18px; font-size: 12px; }
@@ -202,6 +206,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
   .prep-qty { font-size: 13px; }
   .gi-name { font-size: 14px; }
   .gi-qty { font-size: 13px; }
+}
+
+.recipes-section{padding:0 24px;display:none;}
+.recipe-card{padding:20px 0;border-bottom:0.5px solid var(--border);}
+.recipe-cuisine{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;display:inline-block;margin-bottom:8px;}
+.recipe-name{font-family:'DM Serif Display',serif;font-size:19px;line-height:1.25;color:var(--text);margin-bottom:4px;}
+.recipe-meta{font-size:11px;color:var(--muted);margin-bottom:12px;letter-spacing:.03em;}
+.recipe-body{font-size:13px;color:var(--text);line-height:1.75;}
+.recipe-body p{margin-bottom:8px;}
+.recipe-body strong{font-weight:500;color:var(--olive-dk);}
+.recipe-macros{display:flex;gap:14px;margin-top:12px;}
+@media(min-width:768px){
+  .recipes-section{padding:0 48px;}
+  .recipe-name{font-size:24px;}
+  .recipe-body{font-size:14px;}
+  .recipes-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;}
+  .recipe-card{padding:24px 0;}
 }
 </style>
 </head>
@@ -274,6 +295,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
     <div class="grocery-section" id="grocery-section">
       <div id="grocery-list"></div>
     </div>
+    <div class="recipes-section" id="recipes-section">
+      <div class="recipes-grid" id="recipes-grid"></div>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -292,6 +316,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
     <div class="nav-item" onclick="showTab('grocery',this)">
       <div class="nav-icon"><div class="nav-sq"></div></div>
       <div class="nav-label">Shop</div>
+    </div>
+    <div class="nav-item" onclick="showTab('recipes',this)">
+      <div class="nav-icon"><div class="nav-book"></div></div>
+      <div class="nav-label">Recipes</div>
     </div>
   </div>
 </div>
@@ -452,6 +480,185 @@ const GROCERY=[
 ];
 
 // ── RENDER ────────────────────────────────────────────────
+
+const RECIPES = [
+  {
+    cuisine:'Indian', tc:'t-ind',
+    name:'Tofu bhurji almond wrap',
+    meta:'Carry meal · Mon · 294 kcal',
+    steps:[
+      '<strong>Bhurji:</strong> Crumble 300g HP Tandoori tofu. Sauté ½ onion in 1 tsp oil with cumin seeds. Add ½ chopped tomato, turmeric, coriander. Add tofu. Cook 6-8 min stirring. Finish with lemon + fresh coriander.',
+      '<strong>Assemble:</strong> Warm 1 almond flour wrap 30 sec in pan. Spread hung curd inside. Add 140g bhurji. Roll tight in foil.',
+      '<strong>Batch note:</strong> Make 300g bhurji Sunday. Stores fridge 3 days. Reheat 2 min in pan before rolling.'
+    ],
+    p:24,c:18,f:14,k:294
+  },
+  {
+    cuisine:'Italian', tc:'t-ital',
+    name:'Pesto pasta with paneer',
+    meta:'Dinner · Mon · 514 kcal',
+    steps:[
+      '<strong>Cook:</strong> 75g protein pasta al dente — do not overcook. Drain very well.',
+      '<strong>Pan-fry:</strong> 70g paneer cubes in 1 tsp olive oil until golden on two sides.',
+      '<strong>Assemble:</strong> Add 100g cherry tomatoes to pan, cook 2 min. Add drained pasta. Off the heat: add 2 heaped tbsp pesto. Toss. Plate immediately with generous shaved parmesan.',
+      '<strong>His:</strong> 120g pasta, 120g paneer, same pesto. Eat immediately — this pasta does not sit.'
+    ],
+    p:34,c:46,f:22,k:514
+  },
+  {
+    cuisine:'Mediterranean', tc:'t-med',
+    name:'Paneer & roasted veg wrap',
+    meta:'Carry meal · Tue · 360 kcal',
+    steps:[
+      '<strong>From Sunday prep:</strong> 1 almond flour wrap + 2 tbsp hummus spread + 80g cold grilled paneer + cold roasted capsicum and zucchini + baby spinach + tahini drizzle.',
+      '<strong>Assembly:</strong> 3 minutes. Everything is already prepped Sunday. Roll tight in foil.',
+      '<strong>Tahini drizzle:</strong> 1 tbsp tahini + squeeze of lemon + pinch of salt + 1 tsp water. Stir until pourable.'
+    ],
+    p:25,c:20,f:20,k:360
+  },
+  {
+    cuisine:'Thai', tc:'t-thai',
+    name:'Thai basil tofu stir fry',
+    meta:'Dinner · Tue · 338 kcal',
+    steps:[
+      '<strong>Tofu:</strong> Crumble 150g extra-firm tofu with hands — uneven pieces crisp better. Fry in 1 tsp sesame oil in a very hot pan. Do not stir for first 3 min. Then stir and fry until dry and golden, 6-8 min total.',
+      '<strong>Sauce:</strong> Push tofu to side. Add 4 garlic cloves minced + 2 green chillies sliced. Fry 30 sec. Add 1 tbsp soy sauce + 1 tsp vegetarian oyster sauce + ½ tsp sugar. Toss everything.',
+      '<strong>Finish:</strong> Turn off heat. Add a very large handful of fresh basil — stir through off the heat only. Serve over 80g jasmine rice.',
+      '<strong>His:</strong> 250g tofu, double sauce, 150g rice.'
+    ],
+    p:24,c:38,f:10,k:338
+  },
+  {
+    cuisine:'Thai', tc:'t-thai',
+    name:'Sesame glass noodle box',
+    meta:'Carry meal · Wed · 297 kcal',
+    steps:[
+      '<strong>Make Sunday night:</strong> Cook 50g glass noodles per packet. Rinse immediately under cold water. Drain well.',
+      '<strong>Dressing:</strong> 1 tbsp soy + 1 tsp sesame oil + 1 tsp rice vinegar + ½ tsp sugar + chilli flakes + 1 garlic clove minced. Toss noodles in dressing.',
+      '<strong>Add:</strong> Shredded cucumber + sliced spring onion + sesame seeds. Top with 100g Sunday's pan-fried tandoori tofu cubes.',
+      '<strong>Store:</strong> In your carry box in fridge. Grab Wednesday morning — noodles absorb dressing overnight and taste much better.'
+    ],
+    p:23,c:30,f:9,k:297
+  },
+  {
+    cuisine:'Italian', tc:'t-ital',
+    name:'Roasted tomato pasta',
+    meta:'Dinner · Wed · 556 kcal',
+    steps:[
+      '<strong>Roast (from Sunday prep):</strong> Reheat 300g roasted cherry tomatoes + garlic in oven at 180°C for 8 min, or straight from the roasting pan on the hob.',
+      '<strong>Cook:</strong> 75g protein pasta al dente. Reserve a cup of pasta water.',
+      '<strong>Assemble:</strong> Toss drained pasta into tomatoes with a splash of pasta water. Add 70g pan-fried paneer cubes.',
+      '<strong>Finish:</strong> Plate. Shave parmesan generously over the hot pasta first — it melts into the sauce. Tear 60g fresh mozzarella on top. Crack black pepper. Done.',
+      '<strong>His:</strong> 120g pasta, 120g paneer, more of both cheeses. Buy mozzarella same day.'
+    ],
+    p:36,c:48,f:24,k:556
+  },
+  {
+    cuisine:'Mexican', tc:'t-mex',
+    name:'Black bean & paneer wrap',
+    meta:'Carry meal · Thu · 344 kcal',
+    steps:[
+      '<strong>From Sunday prep:</strong> Seasoned black beans are ready in fridge. Pan-fry 60g paneer cubes with chilli flakes + garlic until golden.',
+      '<strong>Assemble:</strong> 1 almond flour wrap + 2 tbsp black beans (cold is fine) + paneer + shredded romaine + diced tomato + 1 tbsp hung curd + squeeze of lime.',
+      '<strong>Roll</strong> tight in foil. Stays perfect 5 hours.'
+    ],
+    p:26,c:24,f:16,k:344
+  },
+  {
+    cuisine:'Mediterranean', tc:'t-med',
+    name:'Warm roasted veg bowl',
+    meta:'Dinner · Thu · 398 kcal',
+    steps:[
+      '<strong>Reheat:</strong> Sunday's roasted veg (zucchini, capsicum, cherry tomatoes, red onion) in oven at 180°C for 8 min.',
+      '<strong>Pan-fry:</strong> 90g paneer cubes until golden.',
+      '<strong>Lemon tahini dressing:</strong> 1 tbsp tahini + juice of ½ lemon + 1 small garlic clove grated + 2 tbsp water + salt. Whisk until pourable.',
+      '<strong>Bowl:</strong> Roasted veg + paneer + dressing drizzled over + fresh parsley + 2 tbsp hummus on the side.',
+      '<strong>His:</strong> Same bowl + 100g brown rice + double the paneer.'
+    ],
+    p:28,c:18,f:24,k:398
+  },
+  {
+    cuisine:'Italian', tc:'t-ital',
+    name:'Caprese paneer box',
+    meta:'Carry meal · Fri & Sat · 278 kcal',
+    steps:[
+      '<strong>Assemble:</strong> 90g paneer sliced into thick slabs + halved cherry tomatoes + fresh basil leaves + 1 tsp good olive oil + balsamic vinegar + flaky salt + cracked black pepper.',
+      '<strong>Pack</strong> in a flat container. Two thin slices of sourdough in a separate bag.',
+      '<strong>No reheating needed.</strong> Eat the sourdough alongside. Tastes like a proper Italian antipasto plate.'
+    ],
+    p:22,c:16,f:14,k:278
+  },
+  {
+    cuisine:'Indian', tc:'t-ind',
+    name:'Paneer makhani',
+    meta:'Dinner · Fri · 396 kcal',
+    steps:[
+      '<strong>Makhani base (bulk freeze batch):</strong> Blanch 600g tomatoes + 1 large onion + 8 garlic cloves + 1 inch ginger in boiling water 10 min. Drain, blend completely smooth.',
+      '<strong>Cook base:</strong> 1.5 tbsp butter in a heavy pot. Add blended paste. Cook on medium 15 min stirring — it will deepen in colour. Add 1 tsp Kashmiri red chilli + 1 tsp coriander + ½ tsp cumin + salt + 1 tbsp sugar. Cook 5 more min. Add 3 tbsp cream + 1 tsp kasuri methi crushed. Simmer 5 min. Cool and freeze in 5 x 200ml portions.',
+      '<strong>When eating:</strong> Defrost one 200ml base portion. Heat in pan, add 90g cubed fresh paneer. Simmer 6 min. Optional: 1 small pat of butter at the end.',
+      '<strong>Serve</strong> with 1 protein atta roti for you. His: the rest of the base + 150g paneer + 3 rotis.'
+    ],
+    p:30,c:16,f:24,k:396
+  },
+  {
+    cuisine:'Indonesian', tc:'t-indo',
+    name:'Tofu kecap manis braise',
+    meta:'Dinner · Sat · 320 kcal',
+    steps:[
+      '<strong>Cut</strong> 200g firm tofu into thick slabs — not cubes, slabs hold better during the braise.',
+      '<strong>Braise:</strong> In a wide shallow pan: 3 tbsp kecap manis + 1.5 tbsp regular soy + 3 garlic cloves minced + 1 bay leaf + ¼ tsp ground coriander + 150ml water. Add tofu. Simmer uncovered on medium-low, spooning sauce over tofu every few minutes.',
+      '<strong>Reduce:</strong> Cook 20-25 min until liquid is almost completely gone and sauce is thick and glossy.',
+      '<strong>Fry:</strong> Add 1 tsp neutral oil and fry the tofu in the residual sticky sauce 2 min each side until caramelised and lacquered.',
+      '<strong>Serve:</strong> Your 150g tofu + 80g jasmine rice + cold sliced cucumber. Start at 7pm to eat at 7:30 — cannot be rushed.'
+    ],
+    p:22,c:40,f:8,k:320
+  },
+  {
+    cuisine:'Mexican', tc:'t-mex',
+    name:'Black bean burrito bowl',
+    meta:'Dinner · Sun · 422 kcal',
+    steps:[
+      '<strong>Beans:</strong> Season ½ drained can La Costña black beans in a pan with 1 tsp oil + cumin + smoked paprika + garlic powder + lime juice + salt. Cook 5 min until warm and slightly thickened.',
+      '<strong>Paneer:</strong> Pan-fry 80g paneer cubes with chilli flakes + garlic until golden.',
+      '<strong>Bowl:</strong> 60g cooked brown rice + seasoned beans + paneer + diced fresh tomato + shredded romaine + sliced cucumber + 1 tbsp hung curd + extra lime.',
+      '<strong>His:</strong> Double the beans, 100g paneer, 120g rice, more of everything.'
+    ],
+    p:30,c:44,f:14,k:422
+  },
+  {
+    cuisine:'Thai', tc:'t-thai',
+    name:'Thai green curry paneer',
+    meta:'Dinner · Sun · 446 kcal',
+    steps:[
+      '<strong>Paste:</strong> Heat 1 tsp oil in a heavy pan. Add 1 heaped tbsp Maesri green curry paste. Fry 90 seconds until fragrant and oil separates slightly.',
+      '<strong>Curry:</strong> Add 150ml coconut milk, stir to combine. Bring to a simmer. Add 90g cubed paneer + 1 small zucchini sliced + ½ capsicum sliced. Simmer 8-10 min — do not boil hard or coconut milk splits.',
+      '<strong>Finish:</strong> Taste and adjust salt. Squeeze of lime + torn basil leaves off the heat.',
+      '<strong>Serve</strong> over 80g jasmine rice. His: 150g paneer, full can of coconut milk, 150g rice, more veg.'
+    ],
+    p:26,c:36,f:22,k:446
+  }
+];
+
+function buildRecipes(){
+  const grid = document.getElementById('recipes-grid');
+  let h = '';
+  RECIPES.forEach(r => {
+    h += `<div class="recipe-card">
+      <span class="cuisine-tag ${r.tc}">${r.cuisine}</span>
+      <div class="recipe-name">${r.name}</div>
+      <div class="recipe-meta">${r.meta}</div>
+      <div class="recipe-body">${r.steps.map(s=>`<p>${s}</p>`).join('')}</div>
+      <div class="recipe-macros">
+        <div class="macro-item"><div class="macro-val">${r.p}g</div><div class="macro-label">Protein</div></div>
+        <div class="macro-item"><div class="macro-val">${r.c}g</div><div class="macro-label">Carbs</div></div>
+        <div class="macro-item"><div class="macro-val">${r.f}g</div><div class="macro-label">Fat</div></div>
+        <div class="macro-item"><div class="macro-val">${r.k}</div><div class="macro-label">Kcal</div></div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = h;
+}
+
 function buildChips(){
   const c=document.getElementById('day-chips');
   DAYS.forEach((d,i)=>{
@@ -564,6 +771,7 @@ function showTab(tab,el){
   document.querySelector('.date-row').style.display=tab==='week'?'flex':'none';
   document.getElementById('prep-section').style.display=tab==='prep'?'block':'none';
   document.getElementById('grocery-section').style.display=tab==='grocery'?'block':'none';
+  document.getElementById('recipes-section').style.display=tab==='recipes'?'block':'none';
   document.getElementById('scroll-area').scrollTop=0;
 }
 
@@ -571,6 +779,7 @@ buildChips();
 renderMeals(0);
 buildPrep();
 buildGrocery();
+buildRecipes();
 </script>
 </body>
 </html>
