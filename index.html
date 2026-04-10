@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>My Nutrition Plan</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 :root {
   --olive:#A3A380;--golden:#D7CE93;--daisy:#EFEBCE;
@@ -126,6 +126,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .nav-item.active .nav-line{background:var(--olive);}
 .nav-item.active .nav-book{border-color:var(--olive);}
 .nav-item.active .nav-book::before{background:var(--olive);box-shadow:0 4px 0 var(--olive);}
+
+/* DAY CHIPS — all dotted, peach blossom active */
+.day-chip{border-style:dotted !important;}
+.day-chip.active{background:#BB8588 !important;color:#EFEBCE !important;border-color:#BB8588 !important;}
+.day-chip.rest{border-style:dotted !important;}
+
+/* MEAL CARDS */
+.meal-block{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;margin:10px 0;border-bottom:none;}
+.meal-divider{height:1.5px;background:var(--blush);border:none;margin:8px 0 10px;border-radius:2px;}
+
+/* BOTTOM NAV — more prominent */
+.bottom-nav{background:var(--olive);border-top:none;}
+.nav-label{color:rgba(239,235,206,.6) !important;}
+.nav-line{background:rgba(239,235,206,.5) !important;}
+.nav-ring{border-color:rgba(239,235,206,.5) !important;}
+.nav-sq{border-color:rgba(239,235,206,.5) !important;}
+.nav-book{border-color:rgba(239,235,206,.5) !important;}
+.nav-book::before{background:rgba(239,235,206,.5) !important;box-shadow:0 4px 0 rgba(239,235,206,.5) !important;}
+.nav-item.active .nav-label{color:#EFEBCE !important;font-weight:500;}
+.nav-item.active .nav-line{background:#EFEBCE !important;}
+.nav-item.active .nav-ring{border-color:#EFEBCE !important;}
+.nav-item.active .nav-sq{border-color:#EFEBCE !important;}
+.nav-item.active .nav-book{border-color:#EFEBCE !important;}
+.nav-item.active .nav-book::before{background:#EFEBCE !important;box-shadow:0 4px 0 #EFEBCE !important;}
+
+/* RECIPE CARDS */
+.recipe-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:20px 22px;margin:10px 0;border-bottom:none;}
+.recipe-card .cuisine-tag{margin-bottom:10px;}
+.recipe-step{font-size:13px;color:var(--text);line-height:1.75;margin-bottom:8px;padding-left:12px;border-left:2px solid var(--blush);}
+
+/* FONT SIZE INCREASES — 30% bigger for small text */
+.meal-time{font-size:13px;}
+.macro-label{font-size:13px;}
+.fixed-label{font-size:13px;}
+.dt-label{font-size:13px;}
+.dt-sub{font-size:13px;}
+.dt-week-item{font-size:14px;}
+.dt-flex-item{font-size:14px;}
+.dt-week-sep{font-size:14px;}
+.header-eyebrow{font-size:13px;}
+.recipe-meta{font-size:14px;}
+.prep-category{font-size:13px;}
+.grocery-category{font-size:13px;}
+.nav-label{font-size:13px;}
+.fixed-sub{font-size:14px;}
+
+@media(min-width:768px){
+  .meal-block{padding:20px 24px;}
+  .recipe-card{padding:24px 28px;}
+  .recipes-grid{grid-template-columns:1fr 1fr;gap:16px;}
+}
 @media(min-width:768px){
   .header{padding:48px 48px 24px;}
   .fixed-meals{padding:12px 48px;}
@@ -160,8 +211,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 
 <div id="app">
   <div class="header">
-    <div class="header-eyebrow">Your nutrition plan</div>
-    <div class="header-title">Good food,<br><em>no thinking.</em></div>
+    <div class="header-eyebrow" id="greeting-eyebrow">Your nutrition plan</div>
+    <div class="header-title" id="greeting-title">Good morning, <em>Manmayee.</em></div>
     <div class="date-row" id="day-chips"></div>
   </div>
   <div class="fixed-meals" id="fixed-meals">
@@ -233,6 +284,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 var PASSWORD = 'peony2024';
 var BFAST = 385;
 var SHAKE = 200;
+
+function setGreeting() {
+  var h = new Date().getHours();
+  var greeting = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+  document.getElementById('greeting-title').innerHTML = greeting + ' <em>Manmayee.</em>';
+}
 
 function checkPw() {
   var val = document.getElementById('pw-input').value;
@@ -522,6 +579,7 @@ function renderMeals(i) {
   d.meals.forEach(function(m) {
     h += '<div class="meal-block">' +
       '<div class="meal-time">' + m.time + '</div>' +
+      '<hr class="meal-divider">' +
       '<div class="meal-top"><div class="meal-name">' + m.name + '</div>' +
       '<span class="cuisine-tag ' + m.tc + '">' + m.tag + '</span></div>' +
       '<div class="meal-desc">' + m.desc + '</div>' +
@@ -627,6 +685,7 @@ function showTab(tab, el) {
   document.getElementById('scroll-area').scrollTop = 0;
 }
 
+setGreeting();
 checkSession();
 buildChips();
 renderMeals(0);
