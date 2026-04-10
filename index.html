@@ -119,6 +119,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
 .dt-sub{font-size:10px;color:rgba(239,235,206,.45);margin-top:2px;}
 .dt-macro-val{font-size:14px;font-weight:500;color:var(--daisy);text-align:right;}
 .dt-macro-label{font-size:10px;color:rgba(239,235,206,.45);text-align:right;}
+.dt-week-row{display:flex;gap:6px;align-items:center;margin:5px 0 4px;flex-wrap:wrap;}
+.dt-week-item{font-size:11px;color:rgba(239,235,206,.55);letter-spacing:.03em;}
+.dt-week-item b{color:rgba(239,235,206,.85);font-weight:500;}
+.dt-week-sep{font-size:11px;color:rgba(239,235,206,.3);}
+
 
 .prep-section{padding:0 24px;display:none;}
 .progress-ring-wrap{display:flex;flex-direction:column;align-items:center;
@@ -310,6 +315,8 @@ function checkPw(){
 }
 
 // ── DATA ──────────────────────────────────────────────────
+const MAINTENANCE = {lift:1550, 'lift+run':1600, rest:1350};
+
 const DAYS=[
   {short:'Mon',type:'lift',meals:[
     {time:'Carry · 12pm',tag:'Indian',tc:'t-ind',name:'Tofu bhurji wrap',
@@ -483,10 +490,17 @@ function renderMeals(i){
       </div>
     </div>`;
   });
+  const weekEaten = DAYS.reduce((s,d)=>s+d.totalK,0);
+  const weekMaint = DAYS.reduce((s,d)=>s+MAINTENANCE[d.type],0);
   h+=`<div class="day-total-bar">
     <div>
       <div class="dt-label">Daily total</div>
       <div class="dt-val">${d.totalK} kcal</div>
+      <div class="dt-week-row">
+        <span class="dt-week-item">Week eaten <b>${weekEaten.toLocaleString()}</b></span>
+        <span class="dt-week-sep">·</span>
+        <span class="dt-week-item">Maintenance <b>${weekMaint.toLocaleString()}</b></span>
+      </div>
       <div class="dt-sub">${typeLabel}</div>
     </div>
     <div>
