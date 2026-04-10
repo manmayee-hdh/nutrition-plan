@@ -333,12 +333,20 @@ function checkPw(){
   const val = document.getElementById('pw-input').value;
   const err = document.getElementById('pw-error');
   if(val === PASSWORD){
+    localStorage.setItem('np_auth', 'true');
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
   } else {
     err.classList.add('show');
     document.getElementById('pw-input').value = '';
     setTimeout(()=>err.classList.remove('show'), 2500);
+  }
+}
+
+function checkSession(){
+  if(localStorage.getItem('np_auth') === 'true'){
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
   }
 }
 
@@ -535,7 +543,7 @@ const RECIPES = [
     steps:[
       '<strong>Make Sunday night:</strong> Cook 50g glass noodles per packet. Rinse immediately under cold water. Drain well.',
       '<strong>Dressing:</strong> 1 tbsp soy + 1 tsp sesame oil + 1 tsp rice vinegar + ½ tsp sugar + chilli flakes + 1 garlic clove minced. Toss noodles in dressing.',
-      '<strong>Add:</strong> Shredded cucumber + sliced spring onion + sesame seeds. Top with 100g Sunday's pan-fried tandoori tofu cubes.',
+      '<strong>Add:</strong> Shredded cucumber + sliced spring onion + sesame seeds. Top with 100g Sunday&#39;s pan-fried tandoori tofu cubes.',
       '<strong>Store:</strong> In your carry box in fridge. Grab Wednesday morning — noodles absorb dressing overnight and taste much better.'
     ],
     p:23,c:30,f:9,k:297
@@ -569,7 +577,7 @@ const RECIPES = [
     name:'Warm roasted veg bowl',
     meta:'Dinner · Thu · 398 kcal',
     steps:[
-      '<strong>Reheat:</strong> Sunday's roasted veg (zucchini, capsicum, cherry tomatoes, red onion) in oven at 180°C for 8 min.',
+      '<strong>Reheat:</strong> Sunday&#39;s roasted veg (zucchini, capsicum, cherry tomatoes, red onion) in oven at 180°C for 8 min.',
       '<strong>Pan-fry:</strong> 90g paneer cubes until golden.',
       '<strong>Lemon tahini dressing:</strong> 1 tbsp tahini + juice of ½ lemon + 1 small garlic clove grated + 2 tbsp water + salt. Whisk until pourable.',
       '<strong>Bowl:</strong> Roasted veg + paneer + dressing drizzled over + fresh parsley + 2 tbsp hummus on the side.',
@@ -775,6 +783,7 @@ function showTab(tab,el){
   document.getElementById('scroll-area').scrollTop=0;
 }
 
+checkSession();
 buildChips();
 renderMeals(0);
 buildPrep();
