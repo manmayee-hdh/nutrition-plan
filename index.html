@@ -497,9 +497,11 @@ function renderMeals(i) {
       '<div class="dt-label">Daily total</div>' +
       '<div class="dt-val">' + d.totalK + ' kcal</div>' +
       '<div class="dt-week-row">' +
-        '<span class="dt-week-item">Week eaten <b>' + weekEaten.toLocaleString() + '</b></span>' +
+        '<span class="dt-week-item">Eaten <b>' + weekEaten.toLocaleString() + '</b></span>' +
         '<span class="dt-week-sep">·</span>' +
-        '<span class="dt-week-item">Maintenance <b>' + weekMaint.toLocaleString() + '</b></span>' +
+        '<span class="dt-week-item">Target <b>' + weekMaint.toLocaleString() + '</b></span>' +
+        '<span class="dt-week-sep">·</span>' +
+        '<span class="dt-week-item">Flex <b>' + (weekMaint - weekEaten).toLocaleString() + '</b></span>' +
       '</div>' +
       '<div class="dt-sub">' + typeLabel + '</div>' +
     '</div>' +
