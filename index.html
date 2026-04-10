@@ -290,11 +290,11 @@ function setGreeting() {
   var h = new Date().getHours();
   var greeting = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
   document.getElementById('greeting-title').innerHTML = greeting + ' <em>Manmayee.</em>';
-  var dayIndex = new Date().getDay();
-  var dayTypes = {0:'rest', 1:'lift', 2:'lift', 3:'lift+run', 4:'rest', 5:'lift', 6:'rest'};
-  var labels = {'lift':'Lift day', 'lift+run':'Lift + run day', 'rest':'Rest day'};
-  var type = dayTypes[dayIndex];
-  document.getElementById('greeting-eyebrow').innerHTML = 'Today is a ' + labels[type] + '.';
+}
+
+function updateDayLabel(type) {
+  var labels = {'lift':'Today is a Lift day.', 'lift+run':'Today is a Lift + Run day.', 'rest':'Today is a Rest day.'};
+  document.getElementById('greeting-eyebrow').innerHTML = labels[type];
 }
 
 function checkPw() {
@@ -571,6 +571,7 @@ function buildChips() {
 function selectDay(i) {
   document.querySelectorAll('.day-chip').forEach(function(b, j){ b.classList.toggle('active', j === i); });
   document.getElementById('shake-row').style.opacity = DAYS[i].type === 'rest' ? '0.35' : '1';
+  updateDayLabel(DAYS[i].type);
   renderMeals(i);
   document.getElementById('scroll-area').scrollTop = 0;
 }
@@ -693,6 +694,7 @@ function showTab(tab, el) {
 }
 
 setGreeting();
+updateDayLabel(DAYS[0].type);
 checkSession();
 buildChips();
 renderMeals(0);
